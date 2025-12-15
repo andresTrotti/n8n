@@ -20,25 +20,37 @@ Measure how often the `timer` and `thermostat` functions are used, and also reco
 - Restart data values to zero in redis
 
 ## Nodes / Steps
+<img width="139" height="125" alt="Captura de pantalla 2025-12-15 a la(s) 1 59 05 p  m" src="https://github.com/user-attachments/assets/f59ba555-cac9-4893-af36-169d2375e672" />
 
 ### Schedule Trigger
 - Configuration: run once every hour for hours 0 through 23.
 - Purpose: start the workflow and capture the current hour for day-boundary logic.
+  
+
 
 ### Vars and Redis
+<img width="226" height="115" alt="Captura de pantalla 2025-12-15 a la(s) 1 59 22 p  m" src="https://github.com/user-attachments/assets/d5481541-127e-46cd-aaa4-e9cc4fdd6773" />
 - Purpose: read the raw data entries from Redis (or from workflow variables that contain Redis data).
 - Expected format: an array of strings where each entry is `"<serial>:<json-string>"`. The JSON contains fields including `timestamp`, `timer`, `light`, `fanspeed`, and `thermostat`.
 
 ### "If" — Day Passed Check
+<img width="140" height="125" alt="Captura de pantalla 2025-12-15 a la(s) 1 59 57 p  m" src="https://github.com/user-attachments/assets/93c3235a-0045-408f-bf3f-a30babb9ba64" />
+
 - Logic: if the current trigger hour equals `0`, consider that a day has passed and take any day-rollover actions as needed.
 
 ### Count Reports
+<img width="118" height="116" alt="Captura de pantalla 2025-12-15 a la(s) 2 00 21 p  m" src="https://github.com/user-attachments/assets/a07ac408-6786-4627-acdd-9e4fa20aff15" />
+
 - Purpose: count the total number of updates received (across all serials) during the period.
 
 ### Check Report Limit
+<img width="171" height="123" alt="Captura de pantalla 2025-12-15 a la(s) 2 00 40 p  m" src="https://github.com/user-attachments/assets/564a2cf6-eeb0-400c-84d8-357f0c0390e6" />
+
 - Condition: proceed only if the total number of updates is >= 50,000. This threshold avoids processing when data volume is insufficient.
 
 ### Digesting (aggregation & transition counting)
+<img width="124" height="115" alt="Captura de pantalla 2025-12-15 a la(s) 2 01 03 p  m" src="https://github.com/user-attachments/assets/b9b80245-4ded-487f-9cf6-ba71b9d0a35c" />
+
 This node aggregates Redis data by `serial`, orders records by `timestamp`, and computes per-serial transition counts. Important rules:
 
 - Records are grouped by `serial`.
@@ -152,14 +164,20 @@ return transitionCounts;
 ```
 
 ## Convert to file and Save in Docker
+<img width="214" height="129" alt="Captura de pantalla 2025-12-15 a la(s) 2 01 58 p  m" src="https://github.com/user-attachments/assets/34e5a999-99a5-4479-b5cf-a3e5a4522537" />
+
 - Create a file with the digested data and save it locally inside the container so it can be persisted to a host volume.
 
 
 ## Execute workflow by last node
+<img width="165" height="137" alt="Captura de pantalla 2025-12-15 a la(s) 2 02 17 p  m" src="https://github.com/user-attachments/assets/9a3b1cee-fa5c-47df-bf14-9ce9d774eebf" />
+
 - After generating and saving the digested file, execute the workflow's last node actions. If the last node must trigger a batch cleaning restart, run the restart command or API call from the workflow.
 
 
 ## Output
+<img width="466" height="379" alt="Untitled 5" src="https://github.com/user-attachments/assets/8b252726-0333-4e56-9674-421c4c56351a" />
+
 - The Digesting step returns an array of objects, each with:
   - `serial` (string)
   - `timer_activation_count` (integer)
