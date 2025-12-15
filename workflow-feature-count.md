@@ -24,10 +24,12 @@ Goal: measure the use of fans, lights, thermostats and other features across fir
 
 - Purpose: determine for each `serial` whether the fireplace has `feature_light`, `feature_thermostat`, and `feature_fan`.
 
-### Counting node (optional) 
+
+### Counting (optional)
+
 <img width="155" height="95" alt="Captura de pantalla 2025-12-15 a la(s) 3 49 03 p  m" src="https://github.com/user-attachments/assets/8ebd3ca7-fe4b-4ec6-9933-57ab20198233" />
 
-by adding this node yo can retrieve a total o fireplaces with the named features 
+- By adding a counting node you can retrieve totals of fireplaces that have the named features (e.g., total with lights, total with fan, etc.).
 
 <img width="352" height="209" alt="Untitled 6" src="https://github.com/user-attachments/assets/7873b507-fb93-43a5-9c62-7e5a0fae405f" />
 
@@ -56,8 +58,6 @@ for (const dataItem of $input.first().json.data) {
 return digested;
 ```
 
-### Counting (optional)
-- By adding a counting node you can retrieve totals of fireplaces that have the named features (e.g., total with lights, total with fan, etc.).
 
 ## Convert to file and Save in Docker
 - Create a file with the digested data and save it locally inside the container to persist it (example path inside container): `/data/digested/<YYYY-MM-DD>-features.json`.
