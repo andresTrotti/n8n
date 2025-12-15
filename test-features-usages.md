@@ -1,5 +1,8 @@
 # Workflow: Test features usages
 
+<img width="1225" height="567" alt="Untitled 4" src="https://github.com/user-attachments/assets/52d853e2-f179-4278-a608-37a5b06e520d" />
+
+
 ## Objective
 Measure how often the `timer` and `thermostat` functions are used, and also record changes to `light` and `fanspeed`, aggregated per device (`serial`).
 
