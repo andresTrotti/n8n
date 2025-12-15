@@ -186,10 +186,3 @@ return transitionCounts;
   - `thermostat_activation_count` (integer)
   - `empty` (boolean) — true only when there was no data
 
-## Notes and suggestions
-- Confirm the expected types for the fields in Redis (strings vs numbers). The current logic compares to string values like `"1"`.
-- Consider storing timestamps as numeric Unix epoch milliseconds for reliable sorting.
-- If you want, I can:
-  - Add examples of input data and expected output,
-  - Move this file to a docs/workflows directory and add index entries,
-  - Convert this into a shorter README or a more detailed design document.
