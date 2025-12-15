@@ -60,7 +60,7 @@ return digested;
 
 
 ## Convert to file and Save in Docker
-- Create a file with the digested data and save it locally inside the container to persist it (example path inside container): `/data/digested/<YYYY-MM-DD>-features.json`.
+- Create a file with the digested data and save it locally inside the container to persist it.
 
 
 ## Execute last node and see result
