@@ -146,6 +146,43 @@ for (const serial in aggregatedData) {
 return transitionCounts;
 ```
 
+## Convert to file and Save in Docker
+- Create a file with the digested data and save it locally inside the container so it can be persisted to a host volume.
+- Suggested path inside container: `/data/digested/<YYYY-MM-DD>-digested.json`.
+- Example NodeJS snippet to write the output array to a file:
+
+```javascript
+const fs = require('fs');
+const path = `/data/digested/${new Date().toISOString().slice(0,10)}-digested.json`;
+fs.mkdirSync('/data/digested', { recursive: true });
+fs.writeFileSync(path, JSON.stringify(transitionCounts, null, 2));
+```
+
+- Docker considerations:
+  - Mount a host directory into the container, e.g. `-v /var/lib/myapp/digested:/data/digested` so files are persisted outside the container lifecycle.
+  - Ensure the container process has write permissions for the mounted directory.
+
+## Execute workflow by last node
+- After generating and saving the digested file, execute the workflow's last node actions. If the last node must trigger a batch cleaning restart, run the restart command or API call from the workflow.
+- Example approaches:
+  - If you control a systemd or supervisord job for the batch cleaner, call into the host (via an API or over SSH) to restart it.
+  - If the batch cleaner is another Docker container, you can restart it from within a containerized orchestration environment (Kubernetes job, Docker API) or call an external deployment API.
+
+- Minimal example using Docker CLI on the host to restart a container named `batch-cleaner`:
+
+```bash
+# on host
+docker restart batch-cleaner
+```
+
+- If you need the workflow to trigger the restart directly from inside the container and Docker socket is mounted, you can call:
+
+```bash
+curl --unix-socket /var/run/docker.sock -X POST "http://localhost/containers/batch-cleaner/restart"
+```
+
+- Security note: mounting the Docker socket into a container grants full control of the Docker daemon. Prefer exposing a limited API or using orchestration tooling where possible.
+
 ## Output
 - The Digesting step returns an array of objects, each with:
   - `serial` (string)
@@ -159,5 +196,6 @@ return transitionCounts;
 - Confirm the expected types for the fields in Redis (strings vs numbers). The current logic compares to string values like `"1"`.
 - Consider storing timestamps as numeric Unix epoch milliseconds for reliable sorting.
 - If you want, I can:
-  - Add additional sections (examples of input data, expected output samples, or diagrams),
-  - Or convert this into a shorter README or a longer design doc.
+  - Add examples of input data and expected output,
+  - Move this file to a docs/workflows directory and add index entries,
+  - Convert this into a shorter README or a more detailed design document.
