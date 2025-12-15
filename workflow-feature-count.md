@@ -1,9 +1,8 @@
 # Workflow: Feature Count
+<img width="1033" height="457" alt="Untitled 2" src="https://github.com/user-attachments/assets/ee839050-2616-402e-a6f4-73bc6b0d1a9f" />
 
 ## Objective
 Goal: measure the use of fans, lights, thermostats and other features across fireplaces.
-
-## Fireplace types
 - Fireplace with lights
 - Fireplace with lights and fan
 - Fireplace with no light, no fan
@@ -11,13 +10,27 @@ Goal: measure the use of fans, lights, thermostats and other features across fir
 ## Workflow description
 
 ### Schedule Trigger
+<img width="134" height="116" alt="Captura de pantalla 2025-12-15 a la(s) 3 47 19 p  m" src="https://github.com/user-attachments/assets/9dee2ed5-cdc4-4566-9d6b-5ad15aab3d71" />
+
 - Trigger: Manual (run on-demand).
 
 ### Vars and Redis
+<img width="235" height="109" alt="Captura de pantalla 2025-12-15 a la(s) 3 47 32 p  m" src="https://github.com/user-attachments/assets/327d8318-33e5-440f-bf6a-8c293a3fb183" />
+
 - Where the data comes from: values are read from Redis (or workflow variables containing Redis results).
 
 ### Digest data
+<img width="122" height="110" alt="Captura de pantalla 2025-12-15 a la(s) 3 47 46 p  m" src="https://github.com/user-attachments/assets/13b139cc-05c6-43dd-a395-9d39665c2663" />
+
 - Purpose: determine for each `serial` whether the fireplace has `feature_light`, `feature_thermostat`, and `feature_fan`.
+
+### Counting node (optional) 
+<img width="155" height="95" alt="Captura de pantalla 2025-12-15 a la(s) 3 49 03 p  m" src="https://github.com/user-attachments/assets/8ebd3ca7-fe4b-4ec6-9933-57ab20198233" />
+
+by adding this node yo can retrieve a total o fireplaces with the named features 
+
+<img width="352" height="209" alt="Untitled 6" src="https://github.com/user-attachments/assets/7873b507-fb93-43a5-9c62-7e5a0fae405f" />
+
 
 ### Example code used in the Digest node
 
@@ -49,35 +62,7 @@ return digested;
 ## Convert to file and Save in Docker
 - Create a file with the digested data and save it locally inside the container to persist it (example path inside container): `/data/digested/<YYYY-MM-DD>-features.json`.
 
-Example Node.js snippet to write the digested object to a file:
 
-```javascript
-const fs = require('fs');
-const outDir = '/data/digested';
-fs.mkdirSync(outDir, { recursive: true });
-const outPath = `${outDir}/${new Date().toISOString().slice(0,10)}-features.json`;
-fs.writeFileSync(outPath, JSON.stringify(digested, null, 2));
-```
+## Execute last node and see result
 
-- Docker considerations:
-  - Mount a host directory into the container, e.g. `-v /var/lib/myapp/digested:/data/digested` so files persist outside container.
-  - Ensure the container process has write permissions for the mounted directory.
-
-## Execute a restart of the batch cleaning last data
-- After saving the file, trigger a restart of the batch cleaning service that processes the last data.
-
-Examples:
-- Restart a Docker container named `batch-cleaner` on the host:
-
-```bash
-# on host
-docker restart batch-cleaner
-```
-
-- From inside a container with access to the Docker socket (not recommended for production):
-
-```bash
-curl --unix-socket /var/run/docker.sock -X POST "http://localhost/containers/batch-cleaner/restart"
-```
-
-Security note: mounting the Docker socket into a container grants full control of the Docker daemon. Prefer safer orchestration or an authenticated API.
+<img width="352" height="209" alt="Untitled 6" src="https://github.com/user-attachments/assets/ab0d34df-e540-454d-9072-af5af87f9a07" />
