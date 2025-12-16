@@ -9,7 +9,7 @@ Goal: measure the use of fans, lights, thermostats and other features across fir
 
 ## Workflow description
 
-### Schedule Trigger
+### Manual Trigger
 <img width="134" height="116" alt="Captura de pantalla 2025-12-15 a la(s) 3 47 19 p  m" src="https://github.com/user-attachments/assets/9dee2ed5-cdc4-4566-9d6b-5ad15aab3d71" />
 
 - Trigger: Manual (run on-demand).
