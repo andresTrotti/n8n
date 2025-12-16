@@ -65,4 +65,5 @@ return digested;
 
 ## Execute last node and see result
 
-<img width="352" height="209" alt="Untitled 6" src="https://github.com/user-attachments/assets/ab0d34df-e540-454d-9072-af5af87f9a07" />
+<img width="448" height="336" alt="Untitled 7" src="https://github.com/user-attachments/assets/dafbd969-836c-40ca-8da2-79d7eff233f5" />
+
